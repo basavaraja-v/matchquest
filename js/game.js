@@ -2,10 +2,10 @@
 const cheersSound = document.getElementById('cheers-sound');
 const coinSound = document.getElementById('coin-sound');
 let correctMatches = 0;
-let score = 0;
 let timer;
 let timeLeft = 60; // Time limit in seconds
-
+let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
+let currentLevelScore = 0;
 // Function to initialize the game
 function initGame() {
     // Load the last level from localStorage or start from level 1
@@ -67,8 +67,14 @@ function loadLevel(level) {
     const levelNumber = document.getElementById('level-number');
     levelNumber.textContent = `Level ${level}`;
 
+     // Update score display
+     const scoreValue = document.getElementById('score');
+     scoreValue.textContent = `${score}`;
+ 
     // Reset correctMatches for the new level
     correctMatches = 0;
+    currentLevelScore = 0;
+    resetTimer();
 }
 
 // Function to render the game area
@@ -139,7 +145,7 @@ function drop(event) {
         event.target.appendChild(animalId);
         correctSound.play();
         event.target.classList.add('correct');
-        updateScore(10); // Increase score by 10
+        updateScore(2); // Increase score by 2
         playCoinAnimation(event.target);
         setTimeout(() => {
             event.target.classList.remove('correct');
@@ -149,17 +155,12 @@ function drop(event) {
         correctMatches++;
 
         // Check if all animals are matched
-        if (correctMatches === getLevelData(parseInt(localStorage.getItem('lastLevel'))).animals.length) {
+        if (correctMatches === document.querySelectorAll('.animal-image').length) {
+            showCongratulation();
             setTimeout(() => {
                 const currentLevel = parseInt(localStorage.getItem('lastLevel'));
                 const nextLevel = currentLevel + 1;
-
-                if (nextLevel > 10) {
-                    // Display congratulatory message if all levels are completed
-                    showCongratulation();
-                } else {
-                    loadLevel(nextLevel);
-                }
+                loadLevel(nextLevel);
             }, 500);
         }
     } else {
@@ -168,26 +169,74 @@ function drop(event) {
         setTimeout(() => {
             event.target.classList.remove('incorrect');
         }, 500);
+        updateScore(-1); // Deduct 1 points from total score
     }
 }
 
 function showCongratulation() {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+
+    // Create modal content
+    const modal = document.createElement('div');
+    modal.classList.add('congratulation-modal');
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <p>Congratulations! Level Completed!</p>
+        </div>
+    `;
+    overlay.appendChild(modal);
+
+    // Play cheers sound
     cheersSound.play();
+
+    // Close modal event listener
+    const closeModal = () => {
+        document.body.removeChild(overlay);
+    };
+    document.getElementById('close-modal').addEventListener('click', closeModal);
+
+    // Remove modal after 3 seconds
+    setTimeout(() => {
+        document.body.removeChild(overlay);
+    }, 500);
 }
 
+// Function to update score and save to localStorage
 function updateScore(points) {
     score += points;
+    currentLevelScore += points;
     document.getElementById('score').textContent = score;
+    localStorage.setItem('score', score);
 }
 
 function playCoinAnimation(element) {
     coinSound.play();
-    const coinIcon = document.createElement('i');
-    coinIcon.classList.add('fas', 'fa-coins', 'coin-animation');
-    element.appendChild(coinIcon);
+    const coinIcon = document.getElementById('coin-icon');
+    const coinAnimation = document.createElement('i');
+    coinAnimation.classList.add('fas', 'fa-coins', 'coin-animation');
+    element.appendChild(coinAnimation);
+
+    // Calculate target position of the coin icon
+    const coinRect = coinIcon.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    const offsetX = coinRect.left - elementRect.left + coinRect.width / 2 - 25; // 25px offset for centering
+
+    // Animate the coin towards the coin icon
+    coinAnimation.animate([
+        { transform: 'translate(0, 0)' },
+        { transform: `translate(${offsetX}px, ${-coinRect.top + coinRect.height / 2}px)` }
+    ], {
+        duration: 1000,
+        easing: 'ease-out',
+        fill: 'forwards'
+    });
 
     setTimeout(() => {
-        element.removeChild(coinIcon);
+        element.removeChild(coinAnimation);
     }, 1000);
 }
 
@@ -195,11 +244,12 @@ function startTimer() {
     const timerElement = document.getElementById('time-left');
     timer = setInterval(() => {
         timeLeft--;
-        timerElement.textContent = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(timer);
-            showGameOverPopup(); // Show game over popup instead of alert
+            // showGameOverPopup(); // Show game over popup instead of alert
+            timeLeft = 0;
         }
+        timerElement.textContent = timeLeft;
     }, 1000); // Update every second
 }
 
@@ -208,11 +258,11 @@ function showGameOverPopup() {
 }
 
 function resetGame() {
-    score = 0;
+    score -= currentLevelScore; // Deduct current level score from the total score
+    currentLevelScore = 0; // Reset current level score
     document.getElementById('score').textContent = score;
-    timeLeft = 60;
-    resetTimer();
-    const currentLevel = 1; // Restart from level 1
+    localStorage.setItem('score', score);
+    const currentLevel = parseInt(localStorage.getItem('lastLevel')); // Get current level from localStorage
     loadLevel(currentLevel);
 }
 

@@ -18,9 +18,9 @@
             <div id="level-number">Level 1</div>
             <div id="score-container">
                 <i class="fas fa-coins" id="coin-icon"></i>
-                <div id="score">0</div>
+                <div id="score"> 0</div>
             </div>
-            <div id="timer">Time: <span id="time-left">60</span>s</div>
+            <!-- <div id="timer">Time: <span id="time-left">60</span>s</div> -->
             <i id="settings-icon" class="fas fa-cog"></i> <!-- Settings Icon -->
         </header>
         <main>
@@ -47,7 +47,8 @@
         </label>
     </div>
     <div id="game-over-popup" class="hidden">
-        <h2>Game Over</h2>
+        <h2>Game Over!</h2>
+        <h3>😔</h3>
         <button id="try-again-button">Try Again</button>
     </div>
     <audio id="background-music" loop>
@@ -64,6 +65,9 @@
     </audio>
     <audio id="coin-sound">
         <source src="assets/coin-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="try-again">
+        <source src="assets/try-again.mp3" type="audio/mpeg">
     </audio>
     <script src="js/main.js"></script>
     <script src="js/game.js"></script>

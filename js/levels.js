@@ -49,18 +49,9 @@ const levels = [
         ],
         names: ['panda', 'tiger', 'cheetah', 'leopard']
     },
+   
     {
         level: 6,
-        animals: [
-            { name: 'fox', image: 'fox.png' },
-            { name: 'wolf', image: 'wolf.png' },
-            { name: 'deer', image: 'deer.png' },
-            { name: 'rabbit', image: 'rabbit.png' }
-        ],
-        names: ['fox', 'wolf', 'deer', 'rabbit']
-    },
-    {
-        level: 7,
         animals: [
             { name: 'owl', image: 'owl.png' },
             { name: 'bat', image: 'bat.png' },
@@ -70,7 +61,7 @@ const levels = [
         names: ['owl', 'bat', 'cockatoo', 'parrot']
     },
     {
-        level: 8,
+        level: 7,
         animals: [
             { name: 'hamster', image: 'hamster.png' },
             { name: 'guinea pig', image: 'guinea-pig.png' },
@@ -78,6 +69,63 @@ const levels = [
             { name: 'gerbil', image: 'gerbil.png' }
         ],
         names: ['hamster', 'guinea pig', 'chinchilla', 'gerbil']
+    },
+    {
+        level: 8,
+        animals: [
+            { name: 'crocodile', image: 'crocodile.png' },
+            { name: 'hippopotamus', image: 'hippopotamus.png' },
+            { name: 'rhinoceros', image: 'rhinoceros.png' },
+            { name: 'giraffe', image: 'giraffe.png' }
+        ],
+        names: ['crocodile', 'hippopotamus', 'rhinoceros', 'giraffe']
+    },
+    {
+        level: 9,
+        animals: [
+            { name: 'antelope', image: 'antelope.png' },
+            { name: 'buffalo', image: 'buffalo.png' },
+            { name: 'camel', image: 'camel.png' },
+            { name: 'donkey', image: 'donkey.png' }
+        ],
+        names: ['antelope', 'buffalo', 'camel', 'donkey']
+    },
+    {
+        level: 10,
+        animals: [
+            { name: 'goat', image: 'goat.png' },
+            { name: 'sheep', image: 'sheep.png' },
+            { name: 'cow', image: 'cow.png' },
+            { name: 'pig', image: 'pig.png' }
+        ],
+        names: ['goat', 'sheep', 'cow', 'pig']
+    },
+];
+
+function getLevelData(level) {
+    return levels.find(l => l.level === level);
+}
+
+function shuffleArray(array) {
+    // Function to shuffle an array (Fisher-Yates shuffle algorithm)
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+
+/*
+ {
+        level: 6,
+        animals: [
+            { name: 'fox', image: 'fox.png' },
+            { name: 'wolf', image: 'wolf.png' },
+            { name: 'deer', image: 'deer.png' },
+            { name: 'rabbit', image: 'rabbit.png' }
+        ],
+        names: ['fox', 'wolf', 'deer', 'rabbit']
     },
     {
         level: 9,
@@ -89,37 +137,7 @@ const levels = [
         ],
         names: ['rabbit', 'frog', 'snail', 'turtle']
     },
-    {
-        level: 10,
-        animals: [
-            { name: 'crocodile', image: 'crocodile.png' },
-            { name: 'hippopotamus', image: 'hippopotamus.png' },
-            { name: 'rhinoceros', image: 'rhinoceros.png' },
-            { name: 'giraffe', image: 'giraffe.png' }
-        ],
-        names: ['crocodile', 'hippopotamus', 'rhinoceros', 'giraffe']
-    },
-    {
-        level: 11,
-        animals: [
-            { name: 'antelope', image: 'antelope.png' },
-            { name: 'buffalo', image: 'buffalo.png' },
-            { name: 'camel', image: 'camel.png' },
-            { name: 'donkey', image: 'donkey.png' }
-        ],
-        names: ['antelope', 'buffalo', 'camel', 'donkey']
-    },
-    {
-        level: 12,
-        animals: [
-            { name: 'goat', image: 'goat.png' },
-            { name: 'sheep', image: 'sheep.png' },
-            { name: 'cow', image: 'cow.png' },
-            { name: 'pig', image: 'pig.png' }
-        ],
-        names: ['goat', 'sheep', 'cow', 'pig']
-    },
-    {
+     {
         level: 13,
         animals: [
             { name: 'chicken', image: 'chicken.png' },
@@ -249,17 +267,4 @@ const levels = [
         ],
         names: ['swordfish', 'anglerfish', 'lionfish', 'moray eel']
     }
-];
-
-function getLevelData(level) {
-    return levels.find(l => l.level === level);
-}
-
-function shuffleArray(array) {
-    // Function to shuffle an array (Fisher-Yates shuffle algorithm)
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
+*/
