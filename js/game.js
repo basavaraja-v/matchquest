@@ -1,6 +1,10 @@
 // Define cheersSound globally
 const cheersSound = document.getElementById('cheers-sound');
+const coinSound = document.getElementById('coin-sound');
 let correctMatches = 0;
+let score = 0;
+let timer;
+let timeLeft = 60; // Time limit in seconds
 
 // Function to initialize the game
 function initGame() {
@@ -33,6 +37,20 @@ function initGame() {
         const incorrectSound = document.getElementById('incorrect-sound');
         correctSound.muted = !event.target.checked;
         incorrectSound.muted = !event.target.checked;
+        coinSound.muted = !event.target.checked;
+    });
+
+    // Start the game with the first level or the last saved level
+    document.getElementById('start-button').addEventListener('click', () => {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+        startTimer();
+    });
+
+    // Set up try again button
+    document.getElementById('try-again-button').addEventListener('click', () => {
+        document.getElementById('game-over-popup').classList.add('hidden');
+        resetGame();
     });
 }
 
@@ -121,6 +139,8 @@ function drop(event) {
         event.target.appendChild(animalId);
         correctSound.play();
         event.target.classList.add('correct');
+        updateScore(10); // Increase score by 10
+        playCoinAnimation(event.target);
         setTimeout(() => {
             event.target.classList.remove('correct');
         }, 500);
@@ -129,16 +149,18 @@ function drop(event) {
         correctMatches++;
 
         // Check if all animals are matched
-        if (correctMatches === document.querySelectorAll('.animal-image').length) {
-            // Show congratulation message
-            showCongratulation();
-
-            // Move to the next level after a delay
+        if (correctMatches === getLevelData(parseInt(localStorage.getItem('lastLevel'))).animals.length) {
             setTimeout(() => {
                 const currentLevel = parseInt(localStorage.getItem('lastLevel'));
                 const nextLevel = currentLevel + 1;
-                loadLevel(nextLevel);
-            }, 3000); // Delay of 3 seconds before moving to the next level
+
+                if (nextLevel > 10) {
+                    // Display congratulatory message if all levels are completed
+                    showCongratulation();
+                } else {
+                    loadLevel(nextLevel);
+                }
+            }, 500);
         }
     } else {
         incorrectSound.play();
@@ -150,38 +172,64 @@ function drop(event) {
 }
 
 function showCongratulation() {
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.classList.add('overlay');
-    document.body.appendChild(overlay);
-
-    // Create modal content
-    const modal = document.createElement('div');
-    modal.classList.add('congratulation-modal');
-    modal.innerHTML = `
-        <div class="modal-content">
-            <span id="close-modal" class="close">&times;</span>
-            <p>Congratulations! Level Completed!</p>
-        </div>
-    `;
-    overlay.appendChild(modal);
-
-    // Play cheers sound
     cheersSound.play();
-
-    // Close modal event listener
-    const closeModal = () => {
-        document.body.removeChild(overlay);
-    };
-    document.getElementById('close-modal').addEventListener('click', closeModal);
-
-    // Remove modal after 3 seconds
-    setTimeout(() => {
-        document.body.removeChild(overlay);
-    }, 3000);
 }
 
+function updateScore(points) {
+    score += points;
+    document.getElementById('score').textContent = score;
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    initGame();
-});
+function playCoinAnimation(element) {
+    coinSound.play();
+    const coinIcon = document.createElement('i');
+    coinIcon.classList.add('fas', 'fa-coins', 'coin-animation');
+    element.appendChild(coinIcon);
+
+    setTimeout(() => {
+        element.removeChild(coinIcon);
+    }, 1000);
+}
+
+function startTimer() {
+    const timerElement = document.getElementById('time-left');
+    timer = setInterval(() => {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            showGameOverPopup(); // Show game over popup instead of alert
+        }
+    }, 1000); // Update every second
+}
+
+function showGameOverPopup() {
+    document.getElementById('game-over-popup').classList.remove('hidden');
+}
+
+function resetGame() {
+    score = 0;
+    document.getElementById('score').textContent = score;
+    timeLeft = 60;
+    resetTimer();
+    const currentLevel = 1; // Restart from level 1
+    loadLevel(currentLevel);
+}
+
+function resetTimer() {
+    clearInterval(timer);
+    timeLeft = 60; // Reset to initial time limit
+    startTimer(); // Restart the timer
+}
+
+// Utility function to shuffle an array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Call initGame when the window loads
+window.onload = initGame;

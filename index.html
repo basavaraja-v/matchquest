@@ -16,6 +16,11 @@
     <div id="game-container" class="hidden">
         <header>
             <div id="level-number">Level 1</div>
+            <div id="score-container">
+                <i class="fas fa-coins" id="coin-icon"></i>
+                <div id="score">0</div>
+            </div>
+            <div id="timer">Time: <span id="time-left">60</span>s</div>
             <i id="settings-icon" class="fas fa-cog"></i> <!-- Settings Icon -->
         </header>
         <main>
@@ -41,10 +46,12 @@
             Sound Effects
         </label>
     </div>
+    <div id="game-over-popup" class="hidden">
+        <h2>Game Over</h2>
+        <button id="try-again-button">Try Again</button>
+    </div>
     <audio id="background-music" loop>
         <source src="assets/background-music.mp3" type="audio/mpeg">
-        <!--Music I Use: https://www.bensound.com/free-music-for-videos
-License code: 2LAKSTBQKFF3IIRF-->
     </audio>
     <audio id="correct-sound">
         <source src="assets/correct-sound.mp3" type="audio/mpeg">
@@ -54,6 +61,9 @@ License code: 2LAKSTBQKFF3IIRF-->
     </audio>
     <audio id="cheers-sound">
         <source src="assets/cheers.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="coin-sound">
+        <source src="assets/coin-sound.mp3" type="audio/mpeg">
     </audio>
     <script src="js/main.js"></script>
     <script src="js/game.js"></script>
