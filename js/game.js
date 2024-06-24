@@ -226,6 +226,19 @@ function updateScore(points) {
     localStorage.setItem('score', score);
 }
 
+function pauseGame() {
+    // Logic to pause the game, such as stopping the timer and muting audio
+    document.getElementById('background-music').pause();
+}
+
+function resumeGame() {
+    // Logic to resume the game, such as restarting the timer and unmuting audio
+    const backgroundMusic = document.getElementById('background-music');
+    backgroundMusic.volume = 0.2;
+    backgroundMusic.play();
+}
+
+
 function playCoinAnimation(element) {
     coinSound.volume = 0.2;
     coinSound.play();
