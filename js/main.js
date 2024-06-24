@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Start background music if enabled in settings
         const backgroundMusic = document.getElementById('background-music');
         if (document.getElementById('toggle-music').checked) {
+            backgroundMusic.volume = 0.2; 
             backgroundMusic.play();
         }
     });

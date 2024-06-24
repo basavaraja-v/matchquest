@@ -25,6 +25,7 @@ function initGame() {
     document.getElementById('toggle-music').addEventListener('change', (event) => {
         const backgroundMusic = document.getElementById('background-music');
         if (event.target.checked) {
+            backgroundMusic.volume = 0.2;
             backgroundMusic.play();
         } else {
             backgroundMusic.pause();
@@ -132,6 +133,12 @@ function drag(event) {
     event.dataTransfer.setData("text", event.target.id);
 }
 
+function speakText(text) {
+    const synth = window.speechSynthesis;
+    const utterThis = new SpeechSynthesisUtterance(text);
+    synth.speak(utterThis);
+}
+
 function drop(event) {
     event.preventDefault();
     const data = event.dataTransfer.getData("text");
@@ -143,6 +150,7 @@ function drop(event) {
     if (event.target.dataset.name === animalId.id) {
         event.target.textContent = ''; // Clear text content
         event.target.appendChild(animalId);
+        correctSound.volume = 0.2;
         correctSound.play();
         event.target.classList.add('correct');
         updateScore(2); // Increase score by 2
@@ -150,6 +158,9 @@ function drop(event) {
         setTimeout(() => {
             event.target.classList.remove('correct');
         }, 500);
+
+        // Speak the name of the correctly matched animal
+        speakText(animalId.id);
 
         // Increment correctMatches
         correctMatches++;
@@ -164,6 +175,7 @@ function drop(event) {
             }, 500);
         }
     } else {
+        incorrectSound.volume = 0.2;
         incorrectSound.play();
         event.target.classList.add('incorrect');
         setTimeout(() => {
@@ -191,6 +203,7 @@ function showCongratulation() {
     overlay.appendChild(modal);
 
     // Play cheers sound
+    cheersSound.volume = 0.2;
     cheersSound.play();
 
     // Close modal event listener
@@ -214,6 +227,7 @@ function updateScore(points) {
 }
 
 function playCoinAnimation(element) {
+    coinSound.volume = 0.2;
     coinSound.play();
     const coinIcon = document.getElementById('coin-icon');
     const coinAnimation = document.createElement('i');
@@ -249,7 +263,7 @@ function startTimer() {
             // showGameOverPopup(); // Show game over popup instead of alert
             timeLeft = 0;
         }
-        timerElement.textContent = timeLeft;
+        // timerElement.textContent = timeLeft.toString();
     }, 1000); // Update every second
 }
 
