@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Match Game</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Pixel font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- FontAwesome for icons -->
+</head>
+<body>
+    <div id="start-screen">
+        <img src="assets/logo1.png" alt="Game Logo">
+        <button id="start-button">Play</button>
+    </div>
+    <div id="game-container" class="hidden">
+        <header>
+            <div id="level-number">Level 1</div>
+            <i id="settings-icon" class="fas fa-cog"></i> <!-- Settings Icon -->
+        </header>
+        <main>
+            <div id="game-area">
+                <!-- Game content will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+    <div id="settings-menu" class="hidden">
+        <h2>Settings <i id="close-settings" class="fas fa-times"></i></h2>
+        <label>
+            <div class="toggle">
+                <input type="checkbox" id="toggle-music" checked>
+                <span class="slider round"></span>
+            </div>
+            Background Music
+        </label>
+        <label>
+            <div class="toggle">
+                <input type="checkbox" id="toggle-sfx" checked>
+                <span class="slider round"></span>
+            </div>
+            Sound Effects
+        </label>
+    </div>
+    <audio id="background-music" loop>
+        <source src="assets/background-music.mp3" type="audio/mpeg">
+        <!--Music I Use: https://www.bensound.com/free-music-for-videos
+License code: 2LAKSTBQKFF3IIRF-->
+    </audio>
+    <audio id="correct-sound">
+        <source src="assets/correct-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="incorrect-sound">
+        <source src="assets/incorrect-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="cheers-sound">
+        <source src="assets/cheers.mp3" type="audio/mpeg">
+    </audio>
+    <script src="js/main.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/levels.js"></script>
+</body>
+</html>
