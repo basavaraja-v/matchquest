@@ -6,6 +6,8 @@ let timer;
 let timeLeft = 60; // Time limit in seconds
 let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score')) : 0;
 let currentLevelScore = 0;
+let draggedElement = null; // To hold the element being dragged
+
 // Function to initialize the game
 function initGame() {
     // Load the last level from localStorage or start from level 1
@@ -53,6 +55,9 @@ function initGame() {
         document.getElementById('game-over-popup').classList.add('hidden');
         resetGame();
     });
+
+    // Responsive design adjustment for drag and drop
+    adjustDragDropForMobile();
 }
 
 // Function to load a specific level
@@ -68,10 +73,10 @@ function loadLevel(level) {
     const levelNumber = document.getElementById('level-number');
     levelNumber.textContent = `Level ${level}`;
 
-     // Update score display
-     const scoreValue = document.getElementById('score');
-     scoreValue.textContent = `${score}`;
- 
+    // Update score display
+    const scoreValue = document.getElementById('score');
+    scoreValue.textContent = `${score}`;
+
     // Reset correctMatches for the new level
     correctMatches = 0;
     currentLevelScore = 0;
@@ -131,6 +136,7 @@ function allowDrop(event) {
 
 function drag(event) {
     event.dataTransfer.setData("text", event.target.id);
+    draggedElement = event.target;
 }
 
 function speakText(text) {
@@ -140,8 +146,12 @@ function speakText(text) {
 }
 
 function drop(event) {
-    event.preventDefault();
-    const data = event.dataTransfer.getData("text");
+    if (event.preventDefault) {
+        event.preventDefault();
+    } else {
+        event.returnValue = false;
+    }
+    const data = draggedElement ? draggedElement.id : event.dataTransfer.getData("text");
     const animalId = document.getElementById(data);
 
     const correctSound = document.getElementById('correct-sound');
@@ -212,7 +222,7 @@ function showCongratulation() {
     };
     document.getElementById('close-modal').addEventListener('click', closeModal);
 
-    // Remove modal after 3 seconds
+    // Remove modal after 0.5 seconds
     setTimeout(() => {
         document.body.removeChild(overlay);
     }, 500);
@@ -237,7 +247,6 @@ function resumeGame() {
     backgroundMusic.volume = 0.2;
     backgroundMusic.play();
 }
-
 
 function playCoinAnimation(element) {
     coinSound.volume = 0.2;
@@ -306,6 +315,59 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
+}
+
+// Function to adjust drag and drop for mobile devices
+function adjustDragDropForMobile() {
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+}
+
+function handleTouchStart(event) {
+    const touch = event.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (target && target.classList.contains('animal-image')) {
+        event.preventDefault();
+        draggedElement = target;
+        target.dispatchEvent(new MouseEvent('dragstart', {
+            bubbles: true,
+            cancelable: true,
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+        }));
+    }
+}
+
+function handleTouchMove(event) {
+    const touch = event.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (target && target.classList.contains('animal-block')) {
+        event.preventDefault();
+        target.dispatchEvent(new MouseEvent('dragover', {
+            bubbles: true,
+            cancelable: true,
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+        }));
+    }
+}
+
+function handleTouchEnd(event) {
+    const touch = event.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+
+    if (target && target.classList.contains('animal-block')) {
+        event.preventDefault();
+        target.dispatchEvent(new MouseEvent('drop', {
+            bubbles: true,
+            cancelable: true,
+            clientX: touch.clientX,
+            clientY: touch.clientY,
+        }));
+    }
 }
 
 // Call initGame when the window loads
